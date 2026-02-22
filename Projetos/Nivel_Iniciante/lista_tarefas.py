@@ -35,6 +35,7 @@ def salvar_arquivo():
             json.dump(tarefas,arquivo_json,indent=4)
 
 def verificar():
+    global tarefas
     try:
         with open('tarefas_registradas.json','r') as arquivo_json:
             tarefas = json.load(arquivo_json)
@@ -42,10 +43,22 @@ def verificar():
             tarefas = []
 
 def exibir():
-    if not 'tarefas_registradas.json':
-        print('Não tenho nada para mostra !')
-    else:
-        print('Lista encontrada')
+    try:
+        with open('tarefas_registradas.json','r') as arquivo_json:
+            dados = json.load(arquivo_json)
+
+            if not dados:
+                print("Nenhuma tarefa registrada !")
+                return
+            
+            print('Lista de Tarefas :')
+            for tarefas in dados:
+                print(f'ID : {tarefas['ID']}')
+                print(f'Tarefa : {tarefas['Tarefa']}')
+                print(f'Status : {tarefas['Atividade']}')
+                print('-=-'*10)
+    except FileNotFoundError:
+        print('Nenhum arquivo encontrado.Salve as tarefas primeiro !')
        
 
 def remover():
