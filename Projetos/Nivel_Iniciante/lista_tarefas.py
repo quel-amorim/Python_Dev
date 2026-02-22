@@ -62,8 +62,39 @@ def exibir():
        
 
 def remover():
-    id_remocao = int(input('Diga qual ID você quer remover ?'))
+    global tarefas
+    
+    if not tarefas:
+        print('Não tem tarefas para remover !')
+        return
+    
+    print('\n Tarefas disponiveis:')
+    for tarefa in tarefas:
+        print(f'ID : {tarefa['ID']} - {tarefa['Tarefa']} {tarefa['Atividade']}')
+    
+    try:
+        id_remocao = int(input('Digite o ID que deseja remover: '))
+    except ValueError:
+        print('ID desconhecido !')
+        return
+    
+    tarefa_encontrada = False
 
+    for tarefa in tarefas:
+        if tarefa["ID"] == id_remocao:
+            tarefas.remove(tarefa)
+            tarefa_encontrada = True
+            print('Tarefa removida com sucesso !')
+            break
+    
+    if not tarefa_encontrada:
+        print('ID não encontrado')
+        return
+    
+    for i , tarefa in enumerate(tarefas):
+        tarefa["ID"] = i + 1
+    
+    salvar_arquivo()
 
 while True:
     verificar() # Ele vai ser o primeiro porque ele vai ver se tem algum arquivo salvo , para não carregar dados novos apagando os velhos
@@ -84,4 +115,6 @@ while True:
             break
         case "3":
             exibir()
+        case "4":
+            remover()
         
