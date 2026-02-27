@@ -3,32 +3,56 @@
 """
 import json
 
-class Login:
+class Usuario:
     def __init__(self):
-        self.meus_usuarios = []
-        self.verificar()
-
-    def verificar(self):
-        global meus_usuarios
-        try:
-            with open('dados_usuarios.json','r') as arquivo_json:
-                self.meus_usuarios = json.load(arquivo_json)
-        except FileExistsError:
-            self.meus_usuarios = []
+        self.usuarios = []
     
-    def salvar(self):
-        if not self.meus_usuarios:
-            pass
-        else:
-            with open('dados_usuarios.json','w') as arquivo_json:
-                json.dump(self.meus_usuarios , arquivo_json , indent=4)
-
-    def registar(self):
-        login = input('registrar um nome de usuario :')
-        senha = input('cadastra senha :')
-
-        usuarios = {"Login" : login , "Senha" : senha}
-        self.meus_usuarios.append(usuarios)
+    def criar(self):
+        while True:
+            try:
+                x = int(input('Cadastrar quantos usuarios ?'))
+                break
+            except ValueError:
+                return "Erro de ditação"
+        
+        for _ in range(x):
+            username = input('Nome de usuario :')
+            __senha = input('Senha :')
+            cliente = {"ID N#": len(self.usuarios)+1,"Usuario" : username ,"Senha" : __senha}
+            self.usuarios.append(cliente)
+        
+        print('usuarios cadastrado com sucesso !')
         self.salvar()
     
-Login().registar()
+    def salvar(self):
+        if not self.usuarios:
+            pass
+        else:
+            with open('usuarios.json','w') as arquivo_json:
+                json.dump(self.usuarios,arquivo_json,indent=4)
+    
+
+class Login(Usuario):
+    def __init__(self):
+        super().__init__()
+        self.verificar()
+    
+    def verificar(self):
+        try:
+            with open('usuarios.json','r') as arquivo_json:
+                self.usuarios = json.load(arquivo_json)
+        except FileNotFoundError:
+            self.usuarios = []
+    
+    def exibir(self):
+        if not self.usuarios:
+            print("Nenhum usuário cadastrado.")
+            return
+        
+        print("\n=== USUÁRIOS CADASTRADOS ===")
+        for usuario in self.usuarios:
+            print(f"ID: {usuario.get('ID N#')}")
+            print(f"Usuário: {usuario.get('Usuario')}")
+            print("-" * 30)
+
+Login().exibir()
