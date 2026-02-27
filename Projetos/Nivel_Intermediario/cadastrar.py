@@ -6,6 +6,14 @@ import json
 class Usuario:
     def __init__(self):
         self.usuarios = []
+        self.verificar() # ele ler se tem algum dado salvo , importante nas partes de editar e remover usuarios !
+    
+    def verificar(self):
+        try:
+            with open('usuarios.json','r') as arquivo_json:
+                self.usuarios = json.load(arquivo_json)
+        except FileNotFoundError:
+            self.usuarios = []
     
     def criar(self):
         while True:
@@ -18,7 +26,7 @@ class Usuario:
         for _ in range(x):
             username = input('Nome de usuario :')
             __senha = input('Senha :')
-            cliente = {"ID N#": len(self.usuarios)+1,"Usuario" : username ,"Senha" : __senha}
+            cliente = {"ID": len(self.usuarios)+1,"Usuario" : username ,"Senha" : __senha}
             self.usuarios.append(cliente)
         
         print('usuarios cadastrado com sucesso !')
@@ -31,18 +39,41 @@ class Usuario:
             with open('usuarios.json','w') as arquivo_json:
                 json.dump(self.usuarios,arquivo_json,indent=4)
     
+    def remover(self):
+        if not self.usuarios:
+            print('Não tem usuarios para remover')
+            return
+        
+        print('\nUsuarios Encontrados :')
+        for cliente in self.usuarios:
+            print(f'ID {cliente['ID']} -> {cliente['Usuario']}')
+
+        try:
+            id_remover = int(input('Diga o id de usuario que deseja excluir :'))
+        except ValueError:
+            return "Id desconhecido !"
+        
+        usuarios_encontrados = False
+        for cliente in self.usuarios:
+            if cliente["ID"] == id_remover:
+                self.usuarios.remove(cliente)
+                usuarios_encontrados = True
+                print('Usuario removido')
+                break
+        
+        if not usuarios_encontrados:
+            print('ID desconhecido')
+            return
+
+        for i , cliente in enumerate(self.usuarios):
+            cliente["ID"] = i+1
+        
+        self.salvar()
 
 class Login(Usuario):
     def __init__(self):
         super().__init__()
         self.verificar()
-    
-    def verificar(self):
-        try:
-            with open('usuarios.json','r') as arquivo_json:
-                self.usuarios = json.load(arquivo_json)
-        except FileNotFoundError:
-            self.usuarios = []
     
     def exibir(self):
         if not self.usuarios:
@@ -55,4 +86,4 @@ class Login(Usuario):
             print(f"Usuário: {usuario.get('Usuario')}")
             print("-" * 30)
 
-Login().exibir()
+Usuario().remover()

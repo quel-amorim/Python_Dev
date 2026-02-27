@@ -1,7 +1,7 @@
 from tkinter import *
 
-root = Tk()
+tela = Tk()
 
-root.title("Primeiro teste")
+tela.title('Primeira Tela de Python')
 
-root.mainloop()
+tela.mainloop()
