@@ -69,6 +69,46 @@ class Usuario:
             cliente["ID"] = i+1
         
         self.salvar()
+    
+    def editar(self):
+        if not self.usuarios:
+            print('Não tem usuarios para editar')
+            return
+        
+        print('\nUsuarios Encontrados :')
+        for cliente in self.usuarios:
+            print(f"ID {cliente['ID']} -> {cliente['Usuario']}")
+
+        try:
+            id_editar = int(input('Diga o ID do usuario que deseja editar :'))
+        except ValueError:
+            return "ID inválido!"
+        
+        usuario_encontrado = False
+
+        for cliente in self.usuarios:
+            if cliente["ID"] == id_editar:
+                usuario_encontrado = True
+                
+                novo_usuario = input('Novo nome de usuario (deixe vazio para não alterar): ')
+                nova_senha = input('Nova senha (deixe vazio para não alterar): ')
+                
+                if novo_usuario:
+                    cliente["Usuario"] = novo_usuario
+                
+                if nova_senha:
+                    cliente["Senha"] = nova_senha
+                
+                print('Usuario editado com sucesso!')
+                break
+        
+        if not usuario_encontrado:
+            print('ID não encontrado')
+            return
+        
+        self.salvar()
+
+
 
 class Login(Usuario):
     def __init__(self):
