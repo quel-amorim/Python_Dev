@@ -122,7 +122,6 @@ class Login(Usuario):
         
         print("\n=== USUÁRIOS CADASTRADOS ===")
         for usuario in self.usuarios:
-            print(f"ID: {usuario.get('ID N#')}")
             print(f"Usuário: {usuario.get('Usuario')}")
             print("-" * 30)
 
